@@ -6,6 +6,7 @@
 
 #ifndef FUSION_MATH_H
 #define FUSION_MATH_H
+#define G_ACCELERATION 9.80665
 
 //------------------------------------------------------------------------------
 // Includes
@@ -134,6 +135,16 @@ static inline float FusionDegreesToRadians(const float degrees) {
  */
 static inline float FusionRadiansToDegrees(const float radians) {
     return radians * (180.0f / (float) M_PI);
+}
+
+/**
+ * @brief Converts Gs to meters per second square.
+ * @param gs Gs.
+ * @return meters per second square.
+ */
+static inline float FusionGsToMps2(const float gs)
+{
+    return gs * G_ACCELERATION;
 }
 
 //------------------------------------------------------------------------------
