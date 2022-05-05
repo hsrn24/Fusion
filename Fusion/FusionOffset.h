@@ -17,11 +17,6 @@
 // Definitions
 
 /**
- * @brief Threshold in degrees per second.
- */
-#define GYRO_OFFSET_THRESHOLD (3.0f)
-
-/**
  * @brief Gyroscope offset algorithm structure.  Structure members are used
  * internally and must not be accessed by the application.
  */
@@ -38,7 +33,7 @@ typedef struct {
 
 void FusionOffsetInitialise(FusionOffset *const offset, 
                                          const unsigned int sampleRate,
-                                         const float treshold = GYRO_OFFSET_THRESHOLD);
+                                         const float treshold);
 
 FusionVector FusionOffsetUpdate(FusionOffset *const offset, FusionVector gyroscope);
 

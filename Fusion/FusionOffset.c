@@ -24,6 +24,11 @@
  */
 #define TIMEOUT (5)
 
+/**
+ * @brief Threshold in degrees per second.
+ */
+#define GYRO_OFFSET_THRESHOLD (3.0f)
+
 //------------------------------------------------------------------------------
 // Functions
 
