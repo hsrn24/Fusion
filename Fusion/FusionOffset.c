@@ -24,11 +24,6 @@
  */
 #define TIMEOUT (5)
 
-/**
- * @brief Threshold in degrees per second.
- */
-#define THRESHOLD (3.0f)
-
 //------------------------------------------------------------------------------
 // Functions
 
@@ -36,9 +31,14 @@
  * @brief Initialises the gyroscope offset algorithm.
  * @param offset Gyroscope offset algorithm structure.
  * @param sampleRate Sample rate in Hz.
+ * @param treshold offset treshold in degrees per second
  */
-void FusionOffsetInitialise(FusionOffset *const offset, const unsigned int sampleRate) {
+void FusionOffsetInitialise(FusionOffset *const offset, 
+                            const unsigned int sampleRate,
+                            const float treshold)
+{
     offset->filterCoefficient = 2.0f * (float) M_PI * CUTOFF_FREQUENCY * (1.0f / (float) sampleRate);
+    offset->treshold = treshold;
     offset->timeout = TIMEOUT * sampleRate;
     offset->timer = 0;
     offset->gyroscopeOffset = FUSION_VECTOR_ZERO;
@@ -57,7 +57,7 @@ FusionVector FusionOffsetUpdate(FusionOffset *const offset, FusionVector gyrosco
     gyroscope = FusionVectorSubtract(gyroscope, offset->gyroscopeOffset);
 
     // Reset timer if gyroscope not stationary
-    if ((fabs(gyroscope.axis.x) > THRESHOLD) || (fabs(gyroscope.axis.y) > THRESHOLD) || (fabs(gyroscope.axis.z) > THRESHOLD)) {
+    if ((fabs(gyroscope.axis.x) > offset->treshold) || (fabs(gyroscope.axis.y) > offset->treshold) || (fabs(gyroscope.axis.z) > offset->treshold)) {
         offset->timer = 0;
         return gyroscope;
     }
