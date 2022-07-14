@@ -66,7 +66,8 @@ typedef union {
 } FusionMatrix;
 
 /**
- * @brief Euler angles.
+ * @brief Euler angles.  Roll, pitch, and yaw correspond to rotations around
+ * X, Y, and Z respectively.
  */
 typedef union {
     float array[3];
@@ -145,6 +146,24 @@ static inline float FusionRadiansToDegrees(const float radians) {
 static inline float FusionGsToMps2(const float gs)
 {
     return gs * G_ACCELERATION;
+}
+
+//------------------------------------------------------------------------------
+// Inline functions - Arc sine
+
+/**
+ * @brief Returns the arc sine of the value.
+ * @param value Value.
+ * @return Arc sine of the value.
+ */
+static inline float FusionAsin(const float value) {
+    if (value <= -1.0f) {
+        return (float) M_PI / -2.0f;
+    }
+    if (value >= 1.0f) {
+        return (float) M_PI / 2.0f;
+    }
+    return asinf(value);
 }
 
 //------------------------------------------------------------------------------
@@ -430,7 +449,7 @@ static inline FusionMatrix FusionQuaternionToMatrix(const FusionQuaternion quate
 }
 
 /**
- * @brief Converts a quaternion to Euler angles in degrees.
+ * @brief Converts a quaternion to ZYX Euler angles in degrees.
  * @param quaternion Quaternion.
  * @return Euler angles in degrees.
  */
@@ -439,7 +458,7 @@ static inline FusionEuler FusionQuaternionToEuler(const FusionQuaternion quatern
     const float halfMinusQySquared = 0.5f - Q.y * Q.y; // calculate common terms to avoid repeated operations
     FusionEuler euler;
     euler.angle.roll = FusionRadiansToDegrees(atan2f(Q.w * Q.x + Q.y * Q.z, halfMinusQySquared - Q.x * Q.x));
-    euler.angle.pitch = FusionRadiansToDegrees(asinf(2.0f * (Q.w * Q.y - Q.z * Q.x)));
+    euler.angle.pitch = FusionRadiansToDegrees(FusionAsin(2.0f * (Q.w * Q.y - Q.z * Q.x)));
     euler.angle.yaw = FusionRadiansToDegrees(atan2f(Q.w * Q.z + Q.x * Q.y, halfMinusQySquared - Q.z * Q.z));
     return euler;
 #undef Q
