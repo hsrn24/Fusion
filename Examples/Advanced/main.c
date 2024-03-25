@@ -7,7 +7,7 @@
 
 int main() {
 
-    // Define calibration (replace with actual calibration data)
+    // Define calibration (replace with actual calibration data if available)
     const FusionMatrix gyroscopeMisalignment = {1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     const FusionVector gyroscopeSensitivity = {1.0f, 1.0f, 1.0f};
     const FusionVector gyroscopeOffset = {0.0f, 0.0f, 0.0f};
@@ -26,10 +26,12 @@ int main() {
 
     // Set AHRS algorithm settings
     const FusionAhrsSettings settings = {
+            .convention = FusionConventionNwu,
             .gain = 0.5f,
+            .gyroscopeRange = 2000.0f, /* replace this with actual gyroscope range in degrees/s */
             .accelerationRejection = 10.0f,
-            .magneticRejection = 20.0f,
-            .rejectionTimeout = 5 * SAMPLE_RATE, /* 5 seconds */
+            .magneticRejection = 10.0f,
+            .recoveryTriggerPeriod = 5 * SAMPLE_RATE, /* 5 seconds */
     };
     FusionAhrsSetSettings(&ahrs, &settings);
 
